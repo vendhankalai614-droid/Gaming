@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendhan Arena | Game Testing Portal</title>
+    <style>
+        /* Cyber Gaming Theme Configuration */
+        :root {
+            --neon-cyan: #00f0ff;
+            --neon-magenta: #ff0055;
+            --neon-purple: #9d4edd;
+            --bg-dark: #050508;
+            --bg-surface: #0f0f16;
+            --bg-card: #151522;
+            --text-primary: #ffffff;
+            --text-secondary: #8e94a5;
+            --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        /* Ambient Plasma Glow In Background */
+        .plasma-glow {
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(157,78,221,0.15) 0%, rgba(0,0,0,0) 70%);
+            top: -100px;
+            right: -100px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Animations */
+        @keyframes glitchIntro {
+            0% { transform: translateY(20px); opacity: 0; }
+            80% { transform: translateY(-2px); opacity: 0.9; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Navigation Bar (Glassmorphic Cyber UI) */
+        header {
+            background-color: rgba(5, 5, 8, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.15);
+            z-index: 1000;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-primary);
+        }
+
+        .logo span {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 8px var(--neon-cyan);
+        }
+
+        /* Layout Architecture */
+        section {
+            padding: 120px 20px 80px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 40px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 60px;
+        }
+
+        .section-title span {
+            color: var(--neon-magenta);
+            text-shadow: 0 0 15px rgba(255, 0, 85, 0.5);
+        }
+
+        /* 1. Hero Homepage Section */
+        #home {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            max-width: 100%;
+            background: linear-gradient(rgba(5, 5, 8, 0.85), rgba(5, 5, 8, 0.95)), 
+                        url('https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
+            padding-top: 0;
+            position: relative;
+        }
+
+        #home::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            animation: glitchIntro 0.8s ease-out;
+            z-index: 5;
+        }
+
+        .hero-content h1 {
+            font-size: 72px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #fff, #a6b1e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-content p {
+            font-size: 20px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .game-btn {
+            display: inline-block;
+            background: transparent;
+            color: var(--neon-cyan);
+            border: 2px solid var(--neon-cyan);
+            padding: 14px 40px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-size: 14px;
+            transition: var(--transition);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+        }
+
+        .game-btn:hover {
+            background-color: var(--neon-cyan);
+            color: var(--bg-dark);
+            box-shadow: 0 0 25px var(--neon-cyan);
+            transform: translateY(-2px);
+        }
+
+        /* 2. About Us Section (The Hub Profile) */
+        .about-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .about-frame {
+            border: 2px solid var(--neon-purple);
+            border-radius: 8px;
+            padding: 8px;
+            background: var(--bg-surface);
+            box-shadow: 0 0 20px rgba(157, 78, 221, 0.2);
+        }
+
+        .about-frame img {
+            width: 100%;
+            border-radius: 4px;
+            display: block;
+            filter: hue-rotate(280deg) brightness(0.9);
+        }
+
+        .about-text h2 {
+            font-size: 32px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        .about-text h3 {
+            color: var(--neon-cyan);
+            font-size: 18px;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+        }
+
+        .about-text p {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        /* 3. Services Section (Game Formats) */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .game-card {
+            background-color: var(--bg-surface);
+            padding: 40px 30px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 5px;
+            background: var(--neon-cyan);
+            transform: scaleX(0);
+            transition: var(--transition);
+        }
+
+        .game-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px);
+            background: var(--bg-card);
+            border-color: rgba(0, 240, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 240, 255, 0.1);
+        }
+
+        .card-icon {
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+
+        .game-card h3 {
+            font-size: 22px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        .game-card p {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        /* 4. Leaderboard Section */
+        #leaderboard {
+            background-color: var(--bg-surface);
+            max-width: 100%;
+        }
+
+        .board-wrapper {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-dark);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .leaderboard-table th, .leaderboard-table td {
+            padding: 18px 25px;
+            text-align: left;
+        }
+
+        .leaderboard-table th {
+            background: var(--bg-card);
+            color: var(--neon-cyan);
+            text-transform: uppercase;
+            font-weight: 700;
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+
+        .leaderboard-table tr {
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            transition: var(--transition);
+        }
+
+        .leaderboard-table tr:hover {
+            background: rgba(157, 78, 221, 0.08);
+        }
+
+        .rank-badge {
+            font-weight: 900;
+            color: var(--neon-magenta);
+        }
+
+        /* 5. Custom Dynamic Contact & Report Portal */
+        .contact-hub-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .action-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .hub-card {
+            background: var(--bg-surface);
+            padding: 25px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: var(--transition);
+        }
+
+        .hub-card:hover {
+            transform: translateX(8px);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
+        }
+
+        .hub-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .hub-icon {
+            font-size: 26px;
+            background: rgba(255,255,255,0.03);
+            width: 55px;
+            height: 55px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .hub-details h4 {
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .hub-details p {
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        .hub-action-btn {
+            background: transparent;
+            color: var(--neon-cyan);
+            border: 1px solid var(--neon-cyan);
+            text-decoration: none;
+            padding: 10px 24px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: var(--transition);
+        }
+
+        .hub-action-btn:hover {
+            background: var(--neon-cyan);
+            color: var(--bg-dark);
+            box-shadow: 0 0 15px var(--neon-cyan);
+        }
+
+        /* New Release Testing & Report Form Panel */
+        .report-form-panel {
+            background: var(--bg-surface);
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 0, 85, 0.2);
+            box-shadow: 0 0 20px rgba(255,0,85,0.05);
+        }
+
+        .report-form-panel h3 {
+            font-size: 20px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            color: var(--neon-magenta);
+            letter-spacing: 1px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            background: var(--bg-dark);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            border-radius: 4px;
+            color: white;
+            outline: none;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: var(--neon-magenta);
+            box-shadow: 0 0 10px rgba(255, 0, 85, 0.2);
+        }
+
+        .submit-report-btn {
+            width: 100%;
+            background: var(--neon-magenta);
+            color: white;
+            border: none;
+            padding: 14px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .submit-report-btn:hover {
+            box-shadow: 0 0 20px var(--neon-magenta);
+            transform: translateY(-2px);
+        }
+
+        /* Footer Frame */
+        footer {
+            background-color: #030305;
+            color: var(--text-secondary);
+            text-align: center;
+            padding: 35px 20px;
+            margin-top: 60px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 13px;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 900px) {
+            .contact-hub-grid, .about-container {
+                grid-template-columns: 1fr;
+            }
+            .hub-card {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+            .hub-info {
+                flex-direction: column;
+            }
+            .nav-links { display: none; }
+            .hero-content h1 { font-size: 42px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="plasma-glow"></div>
+
+    <!-- Header / Cyber Navigation -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">Vendhan<span>.Arena</span></div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">Tester Profile</a></li>
+                <li><a href="#services">Log Pipelines</a></li>
+                <li><a href="#leaderboard">Test Tracker</a></li>
+                <li><a href="#contact">Submission Portal</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- 1. Homepage / Hero Entrance -->
+    <section id="home">
+        <div class="hero-content">
+            <h1>Game Release Testing Center</h1>
+            <p>Deploying advanced bug telemetry reviews, system balancing, and crash report validation configurations for upcoming alpha and beta game builds.</p>
+            <a href="#contact" class="game-btn">Submit Alpha Keys</a>
+        </div>
+    </section>
+
+    <!-- 2. About Tester Profile Section -->
+    <section id="about">
+        <h2 class="section-title">Tester <span>Profile</span></h2>
+        <div class="about-container">
+            <div class="about-frame">
+                <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80" alt="Gamer custom setup rig layout">
+            </div>
+            <div class="about-text">
+                <h2>T. Thamizh Vendhan</h2>
+                <h3>Independent Game Reviewer & System Tester</h3>
+                <p>Operating a dedicated local platform to review gameplay loops, stress-test rendering engine capabilities, and track client interface responsiveness. We break down hardware bottlenecks to help indie creators structure smooth optimization patches before rollout.</p>
+                <p>This sandbox setup acts as a feedback node—logging error loops and validating deployment compatibility arrays cleanly across game releases.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Services Section (Game Testing Pipelines) -->
+    <section id="services">
+        <h2 class="section-title">Testing <span>Pipelines</span></h2>
+        <div class="services-grid">
+            <div class="game-card">
+                <div class="card-icon">🐛</div>
+                <h3>Bug Telemetry</h3>
+                <p>Tracking mechanical code crashes, mapping geometry clipping zones, and reporting memory frame leaks on early build layers.</p>
+            </div>
+            <div class="game-card">
+                <div class="card-icon">📉</div>
+                <h3>Framerate Stressing</h3>
+                <p>Evaluating rendering performance stability, detailing stutter drop frequencies, and testing resource loading spikes.</p>
+            </div>
+            <div class="game-card">
+                <div class="card-icon">🕹️</div>
+                <h3>UX Balancing</h3>
+                <p>Auditing input layout registers, checking keybinding delays, and supplying telemetry reports to scale game balance.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Leaderboard / Build Test Tracker (Additional Section) -->
+    <section id="leaderboard">
+        <div class="board-wrapper">
+            <h2 class="section-title">Build <span>Test Log</span></h2>
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th>Build ID</th>
+                        <th>Game Project Title</th>
+                        <th>Testing Phase</th>
+                        <th>Stability Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="rank-badge">#9042</td>
+                        <td>Project: CyberStrike</td>
+                        <td>Closed Alpha v1.4</td>
+                        <td>88% Stable</td>
+                    </tr>
+                    <tr>
+                        <td class="rank-badge">#8190</td>
+                        <td>Neo-Racer Simulation</td>
+                        <td>Public Beta v0.9</td>
+                        <td>94% Stable</td>
+                    </tr>
+                    <tr>
+                        <td class="rank-badge">#7721</td>
+                        <td>Dungeon Marauder RPG</td>
+                        <td>Stress Test Build</td>
+                        <td>71% Critical</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- 5. Advanced Submission Portal & Networks -->
+    <section id="contact">
+        <h2 class="section-title">Submission <span>Portal</span></h2>
+        <div class="contact-hub-grid">
+            
+            <div class="action-cards">
+                
+                <!-- LinkedIn Link -->
+                <div class="hub-card">
+                    <div class="hub-info">
+                        <div class="hub-icon">💼</div>
+                        <div class="hub-details">
+                            <h4>Corporate Link</h4>
+                            <p>Connect with T. Thamizh Vendhan's professional network.</p>
+                        </div>
+                    </div>
+                    <a href="https://www.linkedin.com/in/thamizh-vendhan-t-7a9112387?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" class="hub-action-btn">Connect</a>
+                </div>
+
+                <!-- GitHub Link -->
+                <div class="hub-card">
+                    <div class="hub-info">
+                        <div class="hub-icon">👾</div>
+                        <div class="hub-details">
+                            <h4>Source Repository</h4>
+                            <p>Inspect script frameworks managed under @vendhankalai614-droid.</p>
+                        </div>
+                    </div>
+                    <a href="https://github.com/vendhankalai614-droid" target="_blank" class="hub-action-btn">Inspect</a>
+                </div>
+
+                <!-- Email Link -->
+                <div class="hub-card">
+                    <div class="hub-info">
+                        <div class="hub-icon">✉️</div>
+                        <div class="hub-details">
+                            <h4>Review Inquiries</h4>
+                            <p>Send direct project code requests to thamizhvendhan475@gmail.com.</p>
+                        </div>
+                    </div>
+                    <a href="mailto:thamizhvendhan475@gmail.com" class="hub-action-btn">Ping Mail</a>
+                </div>
+
+            </div>
+
+            <!-- New Game Release Submission & Bug Reporting Form Panel -->
+            <div class="report-form-panel">
+                <h3>Submit Code / File Bug Report</h3>
+                <form onsubmit="event.preventDefault(); alert('Submission Received! File securely logged into Vendhan Arena database.');">
+                    <div class="form-group">
+                        <label for="submission-type">Submission Category</label>
+                        <select id="submission-type">
+                            <option value="code">New Release Game Code / Key</option>
+                            <option value="bug">Alpha/Beta Bug Incident Report</option>
+                            <option value="sponsorship">Review Request / Sponsorship</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="game-title">Game Title / Project Name</label>
+                        <input type="text" id="game-title" required placeholder="e.g., Space Outlaws Alpha">
+                    </div>
+                    <div class="form-group">
+                        <label for="report-details">Access Code or Bug Description</label>
+                        <textarea id="report-details" rows="4" required placeholder="Provide your game test key or outline error triggers here..."></textarea>
+                    </div>
+                    <button type="submit" class="submit-report-btn">Transmit Logs</button>
+                </form>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer Component Element -->
+    <footer>
+        <p>&copy; 2026 T. Thamizh Vendhan. Task 3 submission engineered for InAmigos Foundation.</p>
+    </footer>
+
+</body>
+</html>
